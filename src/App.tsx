@@ -1,17 +1,12 @@
 import { Suspense } from 'react';
 import './App.css';
-import { getPokemon, GraphQLPokemonResponse } from './query';
+import { getPokemon } from './query';
 
-let globalData : GraphQLPokemonResponse<"getPokemon"> | null = null
 const Pokemon = () => {
-  if(globalData) {
-    return <div>
-    {JSON.stringify(globalData)}
+  const result = getPokemon();
+  return <div>
+    {JSON.stringify(result)}
   </div>
-  }
-  throw getPokemon().then(data => {
-    globalData = data;
-  })
 }
 
 function App() {
