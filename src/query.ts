@@ -1,9 +1,9 @@
 import { ApolloClient, InMemoryCache,gql } from '@apollo/client';
 import type { Query } from '@favware/graphql-pokemon';
-import { createBatchingExecutor } from '@graphql-tools/batch-execute';
+import { BatchHttpLink } from "@apollo/client/link/batch-http";
 
 export type GraphQLPokemonResponse<K extends keyof Omit<Query, '__typename'>> = Record<K, Omit<Query[K], '__typename'>>
-const getPokemonQuery = gql`
+export const getPokemonQuery = gql`
     query GetPokemon($pokemon: PokemonEnum!) {
         getPokemon(pokemon: $pokemon) {
             sprite
@@ -14,22 +14,15 @@ const getPokemonQuery = gql`
     }
 `
 
+const link = new BatchHttpLink({
+    uri: 'https://graphqlpokemon.favware.tech/',
+});
+
 const client = new ApolloClient({
     uri: 'https://graphqlpokemon.favware.tech/',
-    cache: new InMemoryCache()
+    cache: new InMemoryCache(),
+    link
   });
-  
-const batchExec = createBatchingExecutor(
-    ({document,variables}) => {
-        return client.query({
-            query: document,
-            variables
-        })
-    },
-    {
-        batchScheduleFn: callback => setTimeout(callback, 100)
-    },
-)
 
 
 export const getPokemon = (variables: {pokemon: string}) => {
@@ -40,8 +33,8 @@ export const getPokemon = (variables: {pokemon: string}) => {
     if(cached){
         return cached;
     }
-    throw batchExec({
-        document: getPokemonQuery,
+    throw client.query({
+        query: getPokemonQuery,
         variables
     })
 }
