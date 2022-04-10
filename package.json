@@ -5,6 +5,7 @@
   "dependencies": {
     "@apollo/client": "^3.5.10",
     "@favware/graphql-pokemon": "^6.5.0",
+    "@graphql-tools/batch-execute": "^8.4.2",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
