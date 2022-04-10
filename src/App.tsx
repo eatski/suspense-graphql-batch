@@ -2,10 +2,16 @@ import { Suspense } from 'react';
 import './App.css';
 import { getPokemon } from './query';
 
-const Pokemon = () => {
-  const result = getPokemon();
+const Pokemon = ({pokemon}: {pokemon: string}) => {
+  const result = getPokemon({
+    pokemon
+  });
   return <div>
-    {JSON.stringify(result)}
+    <h2>
+    {pokemon}
+    </h2>
+    <img src={result.getPokemon.sprite}>
+    </img>
   </div>
 }
 
@@ -13,7 +19,8 @@ function App() {
   return (
     <div className="App">
       <Suspense fallback={<div>Loading...</div>}>
-        <Pokemon />
+        <Pokemon pokemon="dragonite" />
+        <Pokemon pokemon="pikachu" />
       </Suspense>
     </div>
   );
